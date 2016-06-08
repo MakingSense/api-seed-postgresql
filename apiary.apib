@@ -1,0 +1,250 @@
+FORMAT: 1A
+HOST: https://api-seed-postgresql.com/
+
+# Group Users
+This section groups the user resources.
+
+# User [/api/users]
+Collection of all Users of the platform.
+
++ Attributes
+    + email: user@test.com (string, required) - must be valid email
+    + firstName: John (string, required) - must be between 2 and 255 characters
+    + lastName: Mark (string, required) - must be between 2 and 255 characters
+    + phone: +1 650-253-0000 (string, optional) - must be between 2 and 45 characters
+
+## Create a user [POST]
+
++ Attributes (User)
+
++ Request (application/json)
+    Creates a new User.
+    + Headers
+
+                Authorization : Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1NTY0YmRjNzA1NzUxNmFjMTMyZjkwMjAiLCJpYXQiOjE0MzI2NjU1NDMsImV4cCI6MTQzMzg3NTE0M30.SZli5UyiiWDmIu7YzduMdZ6317ws9q43clGSpr1GZII
+
+
+
+    + Body
+
+            {
+                "email": "phillmont@rw.co",
+                "firstName": "phill",
+                "lastName": "beck",
+                "phone": "+1 650-253-0000"
+            }
+
++ Response 201 (application/json)
+
+    + Body
+
+            {
+                "user": {
+                    "firstName": "phill",
+                    "lastName": "beck",
+                    "email": "phillmont@rw.co",
+                    "phone": "+1 650-253-0000",
+                    "roleId": 2,
+                    "role": {}
+                }
+            }
+
+
+## Get all users [GET]
+
++ Request
+    Retrieves the list of all Users active. **Restricted to Admin users**.
+    + Headers
+
+            Authorization : Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1NTY0YmRjNzA1NzUxNmFjMTMyZjkwMjAiLCJpYXQiOjE0MzI2NjU1NDMsImV4cCI6MTQzMzg3NTE0M30.SZli5UyiiWDmIu7YzduMdZ6317ws9q43clGSpr1GZII
+
++ Response 200 (application/json)
+
+        {
+            "users": [
+                {
+                    "firstName": "phill",
+                    "lastName": "beck",
+                    "email": "phill.beck@rw.co",
+                    "roleId": 2,
+                    "status": "active",
+                    "updatedAt": "2016-04-11T14:12:23.276Z",
+                    "createdAt": "2016-04-11T14:12:23.276Z",
+                    "id": 3,
+                    "role": {}
+                 },
+                 {
+                    "firstName": "car",
+                    "lastName": "jim",
+                    "email": "car.jim@rw.co",
+                    "roleId": 2,
+                    "status": "active",
+                    "updatedAt": "2016-04-11T14:12:23.276Z",
+                    "createdAt": "2016-04-11T14:12:23.276Z",
+                    "id": 3,
+                    "role": {}
+                 },
+                 {
+                    "firstName": "mark",
+                    "lastName": "durandal",
+                    "email": "mark.durandal@rw.co",
+                    "roleId": 2,
+                    "status": "active",
+                    "updatedAt": "2016-04-11T14:12:23.276Z",
+                    "createdAt": "2016-04-11T14:12:23.276Z",
+                    "id": 3,
+                    "role": {}
+                }
+            ]
+        }
+
+
+# Current User [/api/users/self]
+The User that is currently authenticated with the API.
+
+## Get Current User profile [GET]
+
++ Request (application/json)
+    Used to retrieve the profile of the User currently authenticated with the API.
+
+    + Headers
+
+            Authorization : Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI1MzM1OGRhZDY0YzZiNWQ0MWFlMzA3MjgiLCJleHAiOjEzOTc0OTM0MTAsImlhdCI6MTM5NjI4MzgxMH0.LZD2THzehu7peh-nMVa6sFittsCN1hRqvzE4CMnYPRM
+
++ Response 200 (application/json)
+
+            {
+              "user": {
+                  "id": 3,
+                  "roleId": 2,
+                  "email": "phillmont@rw.co",
+                  "phone": null,
+                  "firstName": "phill",
+                  "lastName": "mont",
+                  "status": "active",
+                  "createdAt": "2016-04-11T14:12:23.276Z",
+                  "updatedAt": "2016-04-11T14:12:23.276Z",
+                  "role": {
+                    "id": 2,
+                    "name": "user"
+                  }
+              }
+            }
+
+## Update current User [PUT]
+
++ Request (application/json)
+    Used to update the current User's profile. It returns the updated current User object on success.
+
+    + Headers
+
+              Authorization : Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI1MzM1OGRhZDY0YzZiNWQ0MWFlMzA3MjgiLCJleHAiOjEzOTc0OTM0MTAsImlhdCI6MTM5NjI4MzgxMH0.LZD2THzehu7peh-nMVa6sFittsCN1hRqvzE4CMnYPRM
+
+    + Body
+
+            {
+                "firstName": "gregor",
+                "phone": "+1 650-253-1100"
+            }
+
++ Response 200 (application/json)
+
+            {
+              "user": {
+                  "id": 3,
+                  "roleId": 2,
+                  "email": "gregor@mail.com",
+                  "phone": "+1 650-253-1100",
+                  "firstName": "gregor",
+                  "lastName": "fernandez",
+                  "status": "active",
+                  "createdAt": "2016-04-11T14:12:23.276Z",
+                  "updatedAt": "2016-04-11T14:48:46.418Z",
+                  "role": {
+                    "id": 2,
+                    "name": "user"
+                  }
+              }
+            }
+
+
+# Users Administration [/api/users/{userId}]
+A single User object.
+
++ Parameters
+    + userId: 556490 (required, number) - Integer
+
+## Get a user profile by ID [GET]
+
++ Request
+  Returns a specific User object by its id. **Restricted to Admin users**.
+  + Headers
+
+              Authorization : Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1NTY0YmRjNzA1NzUxNmFjMTMyZjkwMjAiLCJpYXQiOjE0MzI2NjU1NDMsImV4cCI6MTQzMzg3NTE0M30.SZli5UyiiWDmIu7YzduMdZ6317ws9q43clGSpr1GZII
+
++ Response 200 (application/json)
+
+        {
+           "user": {
+              "id": 3,
+              "roleId": 2,
+              "email": "phillmont@rw.co",
+              "phone": null,
+              "firstName": "phill",
+              "lastName": "mont",
+              "status": "active",
+              "createdAt": "2016-04-11T14:12:23.276Z",
+              "updatedAt": "2016-04-11T14:12:23.276Z",
+              "role": {
+                "id": 2,
+                "name": "user"
+              }
+           }
+        }
+
+## Update a user [PUT]
+
++ Request (application/json)
+    Update a User. It returns the updated User object on success. **Restricted to Admin users**.
+
+    + Headers
+
+              Authorization : Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI1MzM1OGRhZDY0YzZiNWQ0MWFlMzA3MjgiLCJleHAiOjEzOTc0OTM0MTAsImlhdCI6MTM5NjI4MzgxMH0.LZD2THzehu7peh-nMVa6sFittsCN1hRqvzE4CMnYPRM
+
+    + Body
+
+              {
+                  "firstName": "jack"
+              }
+
++ Response 200 (application/json)
+
+        {
+           "user": {
+              "id": 3,
+              "roleId": 2,
+              "email": "jack.mounting@rw.co",
+              "phone": null,
+              "firstName": "jack",
+              "lastName": "mounting",
+              "status": "active",
+              "createdAt": "2016-04-11T14:12:23.276Z",
+              "updatedAt": "2016-04-11T14:12:23.276Z",
+              "role": {
+              "id": 2,
+              "name": "user"
+              }
+           }
+        }
+
+
+## Remove a user [DELETE]
+
++ Request
+    Used to remove a user.
+
+  + Headers
+
+              Authorization : Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1NTY0YmRjNzA1NzUxNmFjMTMyZjkwMjAiLCJpYXQiOjE0MzI2NjU1NDMsImV4cCI6MTQzMzg3NTE0M30.SZli5UyiiWDmIu7YzduMdZ6317ws9q43clGSpr1GZII
+
++ Response 204 (application/json)

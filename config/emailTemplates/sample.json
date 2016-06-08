@@ -1,0 +1,38 @@
+{
+  "template_name"   : "sample",
+  "template_content": [],
+  "message"         : {
+    "to"              : [
+      {
+        "email": "",
+        "name" : "",
+        "type" : "to"
+      }
+    ],
+    "track_opens"   : true,
+    "track_clicks"  : true,
+    "auto_text"     : true,
+    "auto_html"     : true,
+    "merge"         : true,
+    "merge_language": "mailchimp",
+    "merge_vars"    : [
+      {
+        "rcpt": "",
+        "vars": [
+          {
+            "name"   : "FIRST_NAME",
+            "content": ""
+          }, {
+            "name"   : "LAST_NAME",
+            "content": ""
+          } ,{
+            "name"   : "EMAIL",
+            "content": ""
+          } ,{
+            "name"   : "CITY_NAME",
+            "content": ""
+          }
+        ]}
+    ]
+  }
+}
