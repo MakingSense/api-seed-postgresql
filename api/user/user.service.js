@@ -4,6 +4,7 @@ import Promise from 'bluebird';
 import BaseService from '../base.service';
 import User from './user.model';
 import Role from './role.model';
+import UserAuth0Service from './user.auth0.service';
 
 // ERRORS
 import ApiError from '../../errors/ApiError';
@@ -15,7 +16,7 @@ import {validations, validationsToUpdate, userValidations} from '../../utils/val
 // UTILS
 import Logger from '../../utils/logger';
 
-const SANITIZE_FIELDS = ['firstName', 'lastName', 'phone', 'email'];
+const SANITIZE_FIELDS = ['firstName', 'lastName', 'phone', 'email', 'password'];
 
 function sanitize(user) {
   return _.pick(_.cloneDeep(user), SANITIZE_FIELDS);
@@ -181,24 +182,38 @@ class UserService extends BaseService {
       return Promise.reject(hasError);
     }
 
-    var user = User.forge(newUser);
-
-    return checkEmailAvailableToCreate(user.email)
+    return checkEmailAvailableToCreate(newUser.email)
       .then(res => {
         if (!res) {
           return Promise.reject(new ApiError(errors.bad_request_400.user_email_used));
         }
 
-        return user
-          .save()
-          .then(user => user.toJSON())
-          .tap(user => Logger.log('info', `[SERVICE] [USER] User with id: ${user.id} has been created`, {
-            user,
-            ctx
-          }))
-          .catch(function(err) {
-            Logger.log('error', `[SERVICE] [USER] Error creating User`, {err, ctx, user});
-            return Promise.reject(new ApiError(errors.internal_server_error_500.server_error, null, err));
+        return UserAuth0Service
+          .create(newUser).then(res => {
+            // remove this attribute because the authentication will be handle for auth0.
+            delete newUser.password;
+            newUser.auth0Id = res.user_id;
+
+            const user = User.forge(newUser);
+
+            return user
+              .save()
+              .then(user => user.toJSON())
+              .tap(user => Logger.log('info', `[SERVICE] [USER] User with id: ${user.id} has been created`, {
+                user,
+                ctx
+              }))
+              .catch(function(err) {
+                Logger.log('error', `[SERVICE] [USER] Error creating User`, {err, ctx, user});
+                return Promise.reject(new ApiError(errors.internal_server_error_500.server_error, null, err));
+              });
+
+          })
+          .catch(err=> {
+            var error = _.cloneDeep(new ApiError(errors.bad_request_400.user_auth0_integration));
+            error.message = error.message.concat(`Details here: ${err.message}`);
+
+            return Promise.reject(error);
           });
       });
   }

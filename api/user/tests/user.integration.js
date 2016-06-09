@@ -4,7 +4,7 @@
 import app from '../../../index';
 import {knex} from '../../setup.teardown';
 import request from 'supertest-as-promised';
-import Auth0Facade from '../../auth0.facade';
+import Auth0Facade from 'auth0.facade.js';
 
 // ERRORS
 import errors from '../../../errors/errors';
@@ -33,7 +33,7 @@ describe('[API] [Users]', function() {
       it('should allow an user to complete his registration', function() {
         return request(app)
           .post(`/api/users`)
-          .send({email: 'user01@mail.com', firstName: 'user', lastName: '01'})
+          .send({email: 'user01@mail.com', firstName: 'user', lastName: '01', password: '123456'})
           .expect(201)
           .then(res => {
             var user = res.body.user;
@@ -125,7 +125,6 @@ describe('[API] [Users]', function() {
             expect(error.message).to.eql(errors.bad_request_400.invalid_last_name.message);
           });
       });
-
 
       it('should not allow an authenticated user to complete his registration if the phone is invalid', function() {
         return request(app)

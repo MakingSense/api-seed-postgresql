@@ -34,6 +34,10 @@ export function validations(entity){
     return new ApiError(errors.bad_request_400.invalid_email);
   }
 
+  if(!entity.password){
+    return new ApiError(errors.bad_request_400.invalid_password);
+  }
+
   if (entity.phone && !checkPhone(entity.phone)) {
     return new ApiError(errors.bad_request_400.invalid_phone);
   }

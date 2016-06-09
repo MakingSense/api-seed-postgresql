@@ -32,7 +32,8 @@ var User = bookshelf.Model.extend({
     string('phone'),
     string('status', {
       validations: [val => _.includes(['active', 'inactive', 'blocked'], val)]
-    })
+    }),
+    string('auth0Id')
   ],
 
   getUserById: Promise.method(function(id) {

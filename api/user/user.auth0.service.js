@@ -21,13 +21,12 @@ class UserAuth0Service {
       return Promise.reject(new Error('Invalid user, must have an email and a password'));
     }
     var userData = _.pick(user, 'email', 'password', 'name');
-    userData.connection = 'Initial-Connection';
+    userData.connection = 'Username-Password-Authentication';
     return this
       .managementClient
       .users
       .create(userData);
   }
-
 }
 
 const singleton = new UserAuth0Service();

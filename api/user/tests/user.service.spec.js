@@ -9,7 +9,8 @@ var genUser = function() {
   user = {
     firstName: 'User',
     lastName: 'Test',
-    email: 'test@test.org'
+    email: 'test@test.org',
+    password: '123456'
   };
 
   return user;

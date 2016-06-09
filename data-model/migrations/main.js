@@ -15,6 +15,7 @@ exports.up = function(knex) {
         table.text('phone');
         table.enu('status', ['active', 'inactive', 'blocked']);
         table.timestamps();
+        table.text('auth_0_id');
       });
     })
 };

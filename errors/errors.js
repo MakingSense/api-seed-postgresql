@@ -27,11 +27,11 @@ module.exports = {
       'status' : 400,
       'message': 'User already signed up.'
     },
-    'user_id_missing'                  : {
+    'user_id_missing'                       : {
       'status' : 400,
       'message': 'User ID missing or invalid in request.'
     },
-    'invalid_user_id'                 :  {
+    'invalid_user_id'                       :  {
       'status' : 400,
       'message': 'Invalid userId.'
     },
@@ -39,37 +39,25 @@ module.exports = {
       'status' : 400,
       'message': 'Invalid first name. Names should be between 2 and 255 characters.'
     },
-    'invalid_last_name'                    : {
+    'invalid_last_name'                     : {
       'status' : 400,
       'message': 'Invalid last name. Names should be between 2 and 255 characters.'
     },
-    'invalid_email'                   : {
+    'invalid_email'                         : {
       'status' : 400,
       'message': 'Invalid email address.'
     },
-    'invalid_phone'                  : {
+    'invalid_phone'                         : {
+      'status' : 400,
+      'message': 'Invalid phone. Phone should be between 2 and 45 characters.'
+    },
+    'invalid_password'                      : {
       'status' : 400,
       'message': 'Invalid phone. Phone should be between 2 and 45 characters.'
     },
     //-----------------------//
     //------- User    -------//
     //-----------------------//
-    'invalid_broker_verification_id'  : {
-      'status' : 400,
-      'message': 'Invalid broker verification identifier. Names should be between 2 and 20 characters.'
-    },
-    'invalid_business_company_name'   : {
-      'status' : 400,
-      'message': 'Invalid business company name. Names should be between 2 and 255 characters.'
-    },
-    'invalid_business_company_type'   : {
-      'status' : 400,
-      'message': 'Invalid type. Allowed event types are "LLC", "LP" or "INC".'
-    },
-    'invalid_workday_supplier_id'     : {
-      'status' : 400,
-      'message': 'Invalid workday supplier identifier. Names should be between 2 and 20 characters.'
-    },
     'invalid_user_status'             : {
       'status' : 400,
       'message': "Invalid user status. Allowed event types are 'active', 'inactive' or 'blocked'."
@@ -77,6 +65,10 @@ module.exports = {
     'user_email_used'                 : {
       'status' : 400,
       'message': 'There is an active User with the same email already registered.'
+    },
+    'user_auth0_integration'                 : {
+      'status' : 400,
+      'message': 'There was an error to request to Auth0.'
     }
   },
   'unauthorized_401'            : {
