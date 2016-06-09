@@ -6,7 +6,6 @@ import config from '../../config/environment';
 
 var ManagementClient = auth0.ManagementClient;
 
-
 class UserAuth0Service {
 
   constructor() {

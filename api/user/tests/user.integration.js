@@ -22,6 +22,10 @@ describe('[API] [Users]', function() {
     throw err;
   }
 
+  function getRandomEmail(){
+    return `${Math.random().toString(36).substring(7)}@test.com`;
+  }
+
   // Clear users after testing
   before(clearUserDatabase);
 
@@ -31,9 +35,11 @@ describe('[API] [Users]', function() {
       before(clearUserDatabase);
 
       it('should allow an user to complete his registration', function() {
+        const email = getRandomEmail();
+
         return request(app)
           .post(`/api/users`)
-          .send({email: 'user01@mail.com', firstName: 'user', lastName: '01', password: '123456'})
+          .send({email: email, firstName: 'user', lastName: '01', password: '123456'})
           .expect(201)
           .then(res => {
             var user = res.body.user;
@@ -45,7 +51,7 @@ describe('[API] [Users]', function() {
     describe('[UNSUCCESSFUL]', function() {
 
       it('should not allow an authenticated user to complete his registration twice', function() {
-        let email = 'user02@mail.com';
+        const email = 'user02@mail.com';
 
         return request(app)
           .post(`/api/users`)
@@ -138,8 +144,6 @@ describe('[API] [Users]', function() {
       });
 
       it('should not allow an authenticated user to complete his registration if there is an email already registered', function() {
-        var email = 'franklopez@mail.com';
-
         return request(app)
           .post(`/api/users`)
           .send({email: 'user04@mail.com', firstName: 'user', lastName: '04'})

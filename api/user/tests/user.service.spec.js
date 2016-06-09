@@ -5,15 +5,19 @@ import UserService from './../user.service.js';
 import {knex} from '../../base.model.js';
 
 var user, requestUser;
-var genUser = function() {
+function genUser() {
   user = {
     firstName: 'User',
     lastName: 'Test',
-    email: 'test@test.org',
+    email: getRandomEmail(),
     password: '123456'
   };
 
   return user;
+};
+
+function getRandomEmail(){
+  return `${Math.random().toString(36).substring(7)}@test.com`;
 };
 
 describe('[Service] [Users]', function() {

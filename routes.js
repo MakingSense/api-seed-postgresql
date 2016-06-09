@@ -23,7 +23,6 @@ export default function(app) {
   app.get('/ping', (req, res) => res.send());
   //app.use('/externals', require('./api/external'));
   app.use('/api', require('./api'));
-  app.use('/auth', require('./auth/index').default);
 
   app.use(function(err, req, res, next) {
     var ctx = req.ctx;

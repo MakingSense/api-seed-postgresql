@@ -1,14 +1,16 @@
 'use strict';
 
+import auth0 from 'auth0';
 import qs from 'querystring';
-import config from '../config/environment';
+import config from '../../config/environment';
 import jwt from 'jsonwebtoken';
 import expressJwt from 'express-jwt';
 import compose from 'composable-middleware';
-import UserService from '../api/user/user.service';
-import Logger from '../utils/logger';
-import ApiError from '../errors/ApiError';
-import errors from '../errors/errors';
+import UserService from '../user/user.service';
+import Logger from '../../utils/logger';
+import ApiError from '../../errors/ApiError';
+import errors from '../../errors/errors';
+import Promise from 'bluebird';
 
 var validateJwt = expressJwt({
   secret: config.jwt.secret,
@@ -31,13 +33,7 @@ export function loadToken() {
     });
 }
 
-var isAuth0Token = function(decodedToken) {
-  if (!decodedToken) {
-    return false
-  }
-  return decodedToken.aud === config.jwt.clientId;
-};
-
+/*
 export function loadUser() {
   return loadToken()
     .use(function(req, res, next) {
@@ -57,6 +53,7 @@ export function loadUser() {
         .catch(next);
     })
 }
+*/
 
 export function loadAndEnforceAuthentication() {
   return compose()
@@ -68,14 +65,13 @@ export function loadAndEnforceAuthentication() {
       validateAndEnforceJwt(req, res, next);
     })
     .use(function(req, res, next) {
-      var id, userPromise;
+      var userPromise;
       var dtoken = req.user;
 
-      userPromise = isAuth0Token(req.user) ? UserService.findByAuth0Id(req.user.sub) : UserService.findById(req.user.id);
+      userPromise = UserService.findByAuth0Id(req.user.sub);
 
       return userPromise.then(function(user) {
-
-        if (user && user.status !== 'active' && dtoken.role !== 'admin') {
+        if (user && user.status !== 'active') {
           throw new ApiError(errors.forbidden_403.user_is_inactive);
         }
 
@@ -84,19 +80,6 @@ export function loadAndEnforceAuthentication() {
         next();
       })
         .catch(next);
-    });
-}
-
-export function isRegistered() {
-  return compose()
-    .use(function(req, res, next) {
-      var token = req.token;
-      var isRegistered = !!req.user;
-      var isAdmin = token.role === 'admin';
-      var err = new Error('UNAUTHORIZED');
-      err.status = 403;
-
-      return isRegistered || isAdmin? next() : next(err);
     });
 }
 
@@ -146,3 +129,24 @@ export function setTokenCookie(req, res) {
   res.cookie(config.id.tokenCookieName, token, {domain: config.id.redirectDomain});
   res.redirect(redirectTo || config.id.redirectUrl || '/');
 }
+
+/**
+ * Login against Auth0
+ * */
+export function login(user, password){
+  auth0.login({
+      connection: 'Username-Password-Authentication',
+      username:   user,
+      password:   password
+    },
+    function (err, result) {
+      console.log('ERR >');
+      console.log(err);
+
+      console.log('RESULT >');
+      console.log(result);
+
+      return Promise.reject(error);
+      // store in cookies
+    });
+};

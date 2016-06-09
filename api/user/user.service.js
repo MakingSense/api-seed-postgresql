@@ -91,37 +91,21 @@ class UserService extends BaseService {
     super(User);
   }
 
-  findById(id, provider, ctx = {}) {
-    provider = provider || 'database';
-
-    if (provider === 'database') {
+  findById(id) {
       return User
         .where('id', id)
         .fetch({withRelated: ['role']})
         .then(user => user && user.toJSON());
-    }
-
-    return UserIdentity
-      .where('provider', provider)
-      .where('auth_id', id)
-      .fetch({withRelated: ['user', 'user.role']})
-      .then(function(identity) {
-        if (!identity) {
-          return identity;
-        }
-        return identity.$user.toJSON();
-      });
   }
 
-  findByAuth0Id(id, ctx = {}) {
-    return this.findById(id, 'auth0', ctx);
+  findByAuth0Id(id) {
+    return User
+      .where('auth0Id', id)
+      .fetch({withRelated: ['role']})
+      .then(user => user && user.toJSON());
   }
 
-  findByMenaId(id, ctx = {}) {
-    return this.findById(id, 'id', ctx);
-  }
-
-  findByEmail(email, ctx = {}) {
+  findByEmail(email) {
     return User
       .where('email', email)
       .fetch({withRelated: ['role', 'identities']})
