@@ -14,7 +14,7 @@ import cookieParser from 'cookie-parser';
 import errorHandler from 'errorhandler';
 import path from 'path';
 import config from './environment';
-import passport from 'passport';
+//import passport from 'passport';
 import Logger from '../utils/logger';
 
 function generateRequestId() {
@@ -45,13 +45,13 @@ export default function(app) {
   app.use(bodyParser.json());
   app.use(methodOverride());
   app.use(cookieParser());
-  app.use(passport.initialize());
+  //app.use(passport.initialize());
 
-  app.set('appPath', path.join(config.root, 'client'));
+  //app.set('appPath', path.join(config.root, 'client'));
 
   if ('production' === env || 'staging' === env) {
     // app.use(favicon(path.join(config.root, 'client', 'favicon.ico')));
-    app.use(express.static(app.get('appPath')));
+    //app.use(express.static(app.get('appPath')));
     app.use(morgan(loggingFormat, {stream: Logger.stream}));
   }
 
@@ -62,7 +62,7 @@ export default function(app) {
 
   if ('development' === env || 'test' === env) {
     app.use(express.static(path.join(config.root, '.tmp')));
-    app.use(express.static(app.get('appPath')));
+    //app.use(express.static(app.get('appPath')));
     app.use(errorHandler()); // Error handler - has to be last
   }
 }

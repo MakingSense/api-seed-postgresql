@@ -24,44 +24,6 @@ class UserController {
   }
 
   /**
-   * Loads user
-   * */
-  load(req, res, next, id) {
-    var user = req.user;
-    var token = req.token;
-    if (id === 'self' || id === 'me') {
-      if (token && !user) { //user is authenticated but not registered
-       return next(new ApiError(errors.not_found_404.user_not_signed_up));
-      }
-
-      id = user.id;
-    }
-
-    if (isNaN(id)) {
-     return next(new ApiError(errors.bad_request_400.invalid_user_id));
-    }
-
-    id = Number(id);
-
-    if (user.id !== id && !user.isAdmin) {
-     return next(new ApiError(errors.forbidden_403.user_permission_denied));
-    }
-
-    return UserService
-      .findById(id)
-      .tap(function(user) {
-        if (!user) {
-          throw new ApiError(errors.not_found_404.user_not_found);
-        }
-      })
-      .then(user => {
-        req.loadedUser = user;
-        next();
-      })
-      .catch(next);
-  }
-
-  /**
    * Creates a new user
    */
   create(req, res, next) {
@@ -95,9 +57,39 @@ class UserController {
   /**
    * Get a single user
    */
-  show(req, res) {
-    var user = req.loadedUser;
-    res.json({user});
+  show(req, res, next) {
+    const user = req.user;
+    const token = req.token;
+    let id = req.params.user;
+
+    if (id === 'self' || id === 'me') {
+      if (token && !user) { //user is authenticated but not registered
+        return next(new ApiError(errors.not_found_404.user_not_signed_up));
+      }
+
+      id = user.id;
+    }
+
+    if (isNaN(id)) {
+      return next(new ApiError(errors.bad_request_400.invalid_user_id));
+    }
+
+    id = Number(id);
+
+    if (user.id !== id && !user.isAdmin) {
+      return next(new ApiError(errors.forbidden_403.user_permission_denied));
+    }
+
+    return UserService
+      .findById(id)
+      .tap(function(user) {
+        if (!user) {
+          throw new ApiError(errors.not_found_404.user_not_found);
+        }
+      })
+      .then(user => {
+        res.status(201).json({user});
+      });
   }
 
   /**

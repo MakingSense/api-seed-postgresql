@@ -100,9 +100,12 @@ class UserService extends BaseService {
 
   findByAuth0Id(id) {
     return User
-      .where('auth0Id', id)
+      .where('auth_0_id', id)
       .fetch({withRelated: ['role']})
-      .then(user => user && user.toJSON());
+      .then(user => user && user.toJSON())
+      .catch(err=> {
+        console.log(err);
+      });
   }
 
   findByEmail(email) {

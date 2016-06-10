@@ -6,8 +6,8 @@
 import {login} from './auth.service';
 
 // ERRORS
-import ApiError from '../errors/ApiError';
-import errors from '../errors/errors';
+import ApiError from '../../errors/ApiError';
+import errors from '../../errors/errors';
 
 class Auth0Controller {
   /**
