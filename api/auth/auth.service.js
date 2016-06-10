@@ -33,28 +33,6 @@ export function loadToken() {
     });
 }
 
-/*
-export function loadUser() {
-  return loadToken()
-    .use(function(req, res, next) {
-      var userPromise;
-      req.token = req.user;
-
-      if (!req.user) {
-        return next();
-      }
-
-      userPromise = isAuth0Token(req.user) ? UserService.findByAuth0Id(req.user.sub) : UserService.findById(req.user.id);
-
-      return userPromise.then(function(user) {
-        req.user = user;
-        next();
-      })
-        .catch(next);
-    })
-}
-*/
-
 export function loadAndEnforceAuthentication() {
   return compose()
     .use(function(req, res, next) {
@@ -121,7 +99,7 @@ export function hasRole(roleRequired) {
         req.user = user;
         req.token = dtoken;
 
-        var role = user ? user.role.name : token.role;
+        var role = user ? user.role.name : req.token.role;
 
         if (role !== roleRequired) {
           Logger.log('warn', `User performed an unauthorized request`, {role, user});

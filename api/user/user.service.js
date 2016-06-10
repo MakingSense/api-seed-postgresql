@@ -130,11 +130,6 @@ class UserService extends BaseService {
     }
 
     changes = isRequesterAdmin(requester) ? sanitizeByAdmin(changes) : sanitize(changes);
-
-    if (changes.brokerVerificationId) {
-      user.type = 'broker';
-    }
-
     user = _.omit(user, 'role');
 
     var hasError = validateUpdate(changes);
@@ -208,7 +203,7 @@ class UserService extends BaseService {
   delete(id, ctx = {}) {
     var requester = ctx.requester || {};
 
-    if (requester.status && requester.status !== 'active') {
+    if (requester && requester.status && requester.status !== 'active') {
       return Promise.reject(new ApiError(errors.forbidden_403.user_permission_denied));
     }
 
@@ -216,53 +211,20 @@ class UserService extends BaseService {
       return Promise.reject(new ApiError(errors.bad_request_400.user_already_signed_up));
     }
 
-    this.findById(id)
+    return this.findById(id)
       .then(user=> {
         return this.update(user, {'status': 'inactive'}, ctx)
           .tap(user => {
             Logger.log('info', `[SERVICE] [USER] User with id: ${user.id} has been set as inactive`)
           })
           .catch(function (err) {
-            Logger.log('error', `[SERVICE] [USER] Error trying to set inactive User with id: ${user.id}`, {
+            Logger.log('error', `[SERVICE] [USER] Error trying to set inactive User with id: ${id}`, {
               err,
               ctx
             });
 
             return Promise.reject(new ApiError(errors.internal_server_error_500.server_error, null, err));
           });
-      });
-  }
-
-  removeUserByAuth0Id(auth0UserId, ctx) {
-    var self = this;
-
-    if (!auth0UserId) {
-      Logger.log('info', ('[Service] [User] [Auth0] Dashboard activity: DELETE. User identifier invalid'));
-      return Promise.resolve({'received': 'OK'});
-    }
-
-    return this.findByAuth0Id(auth0UserId)
-      .then(function(user) {
-        if (!user) {
-          Logger.log('info', `[Service] [User] [Auth0] Dashboard Activity: DELETE. User with identifier: ${auth0UserId} does not exist in our database`, {ctx});
-          return Promise.resolve({'received': 'OK'});
-        }
-
-        ctx.requester = {
-          role: 'admin',
-          status: 'active',
-          type: 'external-Auth0'
-        };
-
-        return self.delete(user.id, ctx)
-          .then(()=> {
-            Logger.log('info', `[Service] [User] [Auth0] Dashboard Activity: DELETE. User with identifier: ${auth0UserId} has been deleted`, {ctx});
-            return Promise.resolve({'received': 'OK'});
-          });
-      })
-      .catch(function(err) {
-        Logger.log(getErrorLogToRemoveAuth0(auth0UserId, err));
-        return Promise.resolve({'received': 'OK'});
       });
   }
 }

@@ -13,7 +13,7 @@ var router = new Router();
 router.post('/', controller.create);
 router.get('/', auth.hasRole('admin'), controller.index);
 router.get('/:user', auth.loadAndEnforceAuthentication(), controller.show);
-//router.put('/:user', controller.update);
-//router.delete('/:id', auth.hasRole('admin'), controller.destroy);
+router.put('/:user', auth.loadAndEnforceAuthentication(), controller.update);
+router.delete('/:id', auth.hasRole('admin'), controller.destroy);
 
 module.exports = router;

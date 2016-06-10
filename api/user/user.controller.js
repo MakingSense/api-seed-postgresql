@@ -42,9 +42,10 @@ class UserController {
    * Updates a single user
    */
   update(req, res, next) {
-    var user = req.loadedUser;
+    var user = req.user;
     var changes = req.body;
     var ctx = req.ctx;
+    ctx.requester = user;
 
     UserService
       .update(user, changes, ctx)
@@ -97,8 +98,11 @@ class UserController {
    * restriction: 'admin'
    */
   destroy(req, res, next) {
-    var ctx = req.ctx;
-    var id = req.params.id;
+    const ctx = req.ctx;
+    const id = req.params.id;
+
+    ctx.requester = req.user;
+
     return UserService
       .delete(id, ctx)
       .then(function(user) {
