@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/MakingSense/api-seed-postgresql.png?label=ready&title=Ready)](https://waffle.io/MakingSense/api-seed-postgresql)
 # api-seed-postgresql
 
 ## Getting Started
