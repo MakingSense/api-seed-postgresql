@@ -50,10 +50,6 @@ function validateUpdate(user) {
   return userValidations(user);
 }
 
-function getErrorLogToRemoveAuth0(auth0UserId, err) {
-  return ('error', `Auth0 - Dashboard - activity - DELETE. Auth0 User identifier "${auth0UserId}"`, err);
-}
-
 function isRequesterAdmin(requester) {
   return (requester.isAdmin || requester.role === 'admin');
 }
